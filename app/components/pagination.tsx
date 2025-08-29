@@ -1,0 +1,32 @@
+"use client";
+
+import { useRouter, useSearchParams } from "next/navigation";
+import { Pagination as MUIPagination } from "@mui/material";
+
+type PaginationProps = {
+  currentPage: number;
+  totalPages: number;
+};
+
+export default function Pagination({
+  currentPage,
+  totalPages,
+}: PaginationProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const changeHandler = (_event: React.ChangeEvent<unknown>, value: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", value.toString());
+    router.push(`?page=${value}`);
+  };
+
+  return (
+    <MUIPagination
+      color="primary"
+      count={totalPages}
+      onChange={changeHandler}
+      page={currentPage}
+    />
+  );
+}

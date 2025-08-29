@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import { type Metadata } from "next";
 import "./globals.css";
 import CustomLayout from "./customLayout";
+import { CharacterProvider } from "@/app/store/characterContext";
 
 export const metadata: Metadata = {
   title: "Alliance",
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CustomLayout>{children}</CustomLayout>
+        <CharacterProvider>
+          <CustomLayout>{children}</CustomLayout>
+        </CharacterProvider>
       </body>
     </html>
   );
