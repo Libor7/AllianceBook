@@ -2,24 +2,20 @@
 
 import { type Character } from "@/lib/models/character";
 import { ListItem, ListItemText } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCharacterContext } from "@/app/hooks/useCharacterContext";
 
 type CharacterItemProps = {
   character: Character;
-  index: number;
 };
 
 export default function CharacterItem({
   character,
-  index,
 }: CharacterItemProps) {
   const router = useRouter();
   const { setCharacterState } = useCharacterContext();
-  const searchParams = useSearchParams();
 
-  const page = searchParams.get("page") || "1";
-  const id = (+page - 1) * 10 + index + 1;
+  const id = character.id;
 
   const clickHandler = () => {
     setCharacterState({
@@ -41,7 +37,7 @@ export default function CharacterItem({
       divider
       onClick={clickHandler}
       onKeyDown={keyDownHandler}
-      sx={{ cursor: "pointer", minWidth: "50vw" }}
+      sx={{ cursor: "pointer" }}
       tabIndex={0}
     >
       <ListItemText primary={character.name} />

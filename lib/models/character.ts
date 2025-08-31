@@ -8,6 +8,7 @@ export interface Character {
   hair_color: string;
   height: string;
   homeworld: string;
+  id: number;
   mass: string;
   name: string;
   skin_color: string;

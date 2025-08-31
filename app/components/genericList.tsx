@@ -12,7 +12,7 @@ export function GenericList<T>({
   ...listProps
 }: GenericListProps<T>) {
   return (
-    <List {...listProps}>
+    <List sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }} {...listProps}>
       {items.map((item, index) => (
         <React.Fragment key={index}>{renderItem(item, index)}</React.Fragment>
       ))}

@@ -17,15 +17,14 @@ export default function DashboardTile({ description, path, title }: AppData) {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
+            margin: "0.5em",
             padding: "1.5em 1em",
             textAlign: "center",
           }}
         >
           <CardContent>
             <Typography variant="h4">{title}</Typography>
-            <Typography variant="body2">
-              {description}
-            </Typography>
+            <Typography variant="body2">{description}</Typography>
           </CardContent>
         </Card>
       </Link>

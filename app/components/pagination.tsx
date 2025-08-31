@@ -16,9 +16,9 @@ export default function Pagination({
   const searchParams = useSearchParams();
 
   const changeHandler = (_event: React.ChangeEvent<unknown>, value: number) => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams);
     params.set("page", value.toString());
-    router.push(`?page=${value}`);
+    router.push(`?${params.toString()}`);
   };
 
   return (
