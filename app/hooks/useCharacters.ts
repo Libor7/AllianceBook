@@ -1,8 +1,13 @@
+/** LIBRARIES */
 import { useEffect, useState } from "react";
-import { useCharacterContext } from "@/app/hooks/useCharacterContext";
-import getAllCharacters from "@/lib/api/allCharacters";
 
-export default function useCharacters() {
+/** HOOKS */
+import { useCharacterContext } from "@/app/hooks/useCharacterContext";
+
+/** MISC */
+import { getAllCharacters } from "@/lib/api/allCharacters";
+
+const useCharacters = () => {
   const [status, setStatus] = useState<number>();
   const { allCharacters, setCharacterState } = useCharacterContext();
 
@@ -24,4 +29,6 @@ export default function useCharacters() {
     characters: allCharacters,
     status,
   };
-}
+};
+
+export default useCharacters;

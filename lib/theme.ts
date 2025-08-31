@@ -1,3 +1,4 @@
+/** LIBRARIES */
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
@@ -12,15 +13,11 @@ const theme = createTheme({
       contrastText: "#ffffff",
     },
     background: {
-      // default: '#121212',  // dark mode 
       default: '#ffffff',
-      // paper: "#1e1e1e",  // dark mode 
       paper: "#f5f5f5",
     },
     text: {
-      // primary: "#ffffff",  // dark mode 
       primary: "#000000",
-      // secondary: "#b0bec5",  // dark mode 
       secondary: "#424242",
     },
     success: {

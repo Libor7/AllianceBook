@@ -1,7 +1,10 @@
 "use client";
 
+/** LIBRARIES */
 import isEqual from "lodash.isequal";
 import { type ReactNode, useEffect } from "react";
+
+/** HOOKS */
 import { useCharacterContext } from "@/app/hooks/useCharacterContext";
 
 type DataContextProviderProps = {
@@ -10,11 +13,11 @@ type DataContextProviderProps = {
   value: unknown;
 };
 
-export default function DataContextProvider({
+const DataContextProvider = ({
   children,
   property,
   value,
-}: DataContextProviderProps) {
+}: DataContextProviderProps) => {
   const { getCharacterStateByName, setCharacterState } = useCharacterContext();
 
   const valueChanged = !isEqual(getCharacterStateByName(property), value);
@@ -28,4 +31,6 @@ export default function DataContextProvider({
   }, [property, setCharacterState, value, valueChanged]);
 
   return <>{children}</>;
-}
+};
+
+export default DataContextProvider;

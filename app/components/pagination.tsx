@@ -1,5 +1,6 @@
 "use client";
 
+/** LIBRARIES */
 import { useRouter, useSearchParams } from "next/navigation";
 import { Pagination as MUIPagination } from "@mui/material";
 
@@ -8,10 +9,7 @@ type PaginationProps = {
   totalPages: number;
 };
 
-export default function Pagination({
-  currentPage,
-  totalPages,
-}: PaginationProps) {
+const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -29,4 +27,6 @@ export default function Pagination({
       page={currentPage}
     />
   );
-}
+};
+
+export default Pagination;

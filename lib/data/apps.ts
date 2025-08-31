@@ -1,4 +1,5 @@
-import { AppData } from "@/lib/models/app";
+/** MODELS */
+import { type AppData } from "@/lib/models/app";
 
 export const apps: AppData[] = [
   {

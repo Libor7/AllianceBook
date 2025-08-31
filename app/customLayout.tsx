@@ -1,17 +1,20 @@
 "use client";
 
+/** LIBRARIES */
 import { CssBaseline, ThemeProvider } from "@mui/material";
+
+/** MISC */
 import theme from "@/lib/theme";
 
-export default function CustomLayout({
-  children,
-}: {
+type CustomLayoutProps = {
   children: React.ReactNode;
-}) {
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      {children}
-    </ThemeProvider>
-  );
-}
+};
+
+const CustomLayout = ({ children }: CustomLayoutProps) => (
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    {children}
+  </ThemeProvider>
+);
+
+export default CustomLayout;

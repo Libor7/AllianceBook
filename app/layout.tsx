@@ -1,7 +1,14 @@
-import { type Metadata } from "next";
-import "./globals.css";
+/** COMPONENTS */
 import CustomLayout from "./customLayout";
+
+/** LIBRARIES */
+import { type Metadata } from "next";
+
+/** MISC */
 import { CharacterProvider } from "@/app/store/characterContext";
+
+/** STYLES */
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Alliance",

@@ -1,5 +1,6 @@
 "use client";
 
+/** LIBRARIES */
 import React, { useEffect, useState } from "react";
 import {
   AppBar,
@@ -10,25 +11,43 @@ import {
   Box,
   Drawer,
   useMediaQuery,
+  Button,
 } from "@mui/material";
-import { Search as SearchIcon, Menu as MenuIcon } from "@mui/icons-material";
+import { Search as SearchIcon } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
-import { apps } from "@/lib/data/apps";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function Header({
-  onSearch,
-}: {
+/** MODELS */
+import { type AppData } from "@/lib/models/app";
+
+/** HOOKS */
+import { useCharacterContext } from "@/app/hooks/useCharacterContext";
+
+/** MISC */
+import { searchOptions } from "@/lib/data/searchOptions";
+import { FILTERS, SEARCH_PLACEHOLDER } from "@/lib/constants/common";
+
+type HeaderProps = {
   onSearch: (query: string) => void;
-}) {
+  onSidebarClick: () => void;
+  searchBy: string;
+};
+
+const Header = ({ onSearch, onSidebarClick, searchBy }: HeaderProps) => {
   const searchParams = useSearchParams();
+  const theme = useTheme();
+  const router = useRouter();
+  const { activeApp } = useCharacterContext();
   const initialQuery = searchParams.get("query") || "";
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const theme = useTheme();
-  const router = useRouter();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { title } =
+    activeApp ?? (JSON.parse(localStorage.getItem("activeApp")!) as AppData);
+  const searchOptionLabel = searchOptions.find(
+    ({ value }) => value === searchBy
+  )?.label;
 
   useEffect(() => {
     setSearchQuery(initialQuery);
@@ -39,7 +58,8 @@ export default function Header({
   }: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(value);
     onSearch(value);
-    const params = new URLSearchParams(window.location.search);
+
+    const params = new URLSearchParams(searchParams);
     if (value) {
       params.set("query", value);
       params.set("page", "1");
@@ -55,9 +75,8 @@ export default function Header({
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          {apps[0].title}
+          {title}
         </Typography>
-
         {isMobile ? (
           <>
             <IconButton
@@ -67,7 +86,6 @@ export default function Header({
             >
               <SearchIcon />
             </IconButton>
-
             <Drawer
               anchor="top"
               open={drawerOpen}
@@ -76,7 +94,7 @@ export default function Header({
               <Box sx={{ p: 2 }}>
                 <InputBase
                   autoFocus
-                  placeholder="Search..."
+                  placeholder={`${SEARCH_PLACEHOLDER} ${searchOptionLabel}`}
                   value={searchQuery}
                   onChange={searchChangeHandler}
                   fullWidth
@@ -84,23 +102,33 @@ export default function Header({
                     bgcolor: "#f1f1f1",
                     px: 2,
                     py: 1,
-                    borderRadius: 1,
+                    borderRadius: 0,
                   }}
                 />
               </Box>
             </Drawer>
           </>
         ) : (
-          <Box sx={{ bgcolor: "#f1f1f1", px: 2, py: 0.5, borderRadius: 1 }}>
+          <Box sx={{ bgcolor: "#f1f1f1", px: 2, py: 0.5, borderRadius: 0 }}>
             <InputBase
-              placeholder="Search..."
+              placeholder={`${SEARCH_PLACEHOLDER} ${searchOptionLabel}`}
               value={searchQuery}
               onChange={searchChangeHandler}
               startAdornment={<SearchIcon sx={{ mr: 1 }} />}
             />
           </Box>
         )}
+        <Button
+          variant="outlined"
+          onClick={onSidebarClick}
+          sx={{ ml: 2 }}
+          color="inherit"
+        >
+          {FILTERS}
+        </Button>
       </Toolbar>
     </AppBar>
   );
-}
+};
+
+export default Header;

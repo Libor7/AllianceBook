@@ -1,31 +1,49 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { GenericList } from "@/app/components/genericList";
+/** COMPONENTS */
+import GenericList from "@/app/components/genericList";
 import Pagination from "@/app/components/pagination";
 import CharacterItem from "@/app/components/characterItem";
-import { GridLayout } from "@/app/components/layouts/gridLayout";
-import { Grid } from "@mui/material";
+import GridLayout from "@/app/components/layouts/gridLayout";
 import DataContextProvider from "@/app/components/util/DataContextProvider";
-import useCharacters from "@/app/hooks/useCharacters";
 import LoadingSpinner from "@/app/components/loadingSpinner";
+import Sidebar from "@/app/components/sidebar";
+import Header from "@/app/components/header";
+
+/** LIBRARIES */
+import { Box, Grid, Typography } from "@mui/material";
+import { useCallback, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
+/** HOOKS */
+import useCharacters from "@/app/hooks/useCharacters";
+import useFilteredCharacters from "@/app/hooks/useFilteredCharacters";
+
+/** MISC */
 import { getCharactersPerPage } from "@/lib/utils/helpers";
 import { CHARACTERS_PER_PAGE } from "@/lib/constants/common";
-import Header from "@/app/components/header";
-import { useCallback } from "react";
-import { useRouter } from "next/navigation";
 
-export default function CharactersPage() {
+const CharactersPage = () => {
   const searchParams = useSearchParams();
-  const { characters, status } = useCharacters();
   const router = useRouter();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { characters, status } = useCharacters();
+  const filteredCharacters = useFilteredCharacters(characters);
 
-  const queryParam = searchParams.get("query")?.toLowerCase() || "";
-  const dataToDisplay = characters
-    ? queryParam
-      ? characters.filter(({ name }) => name.toLowerCase().includes(queryParam))
-      : characters
-    : [];
+  const searchBy = searchParams.get("searchBy") || "name";
+  let minHeight = 0;
+  let maxHeight = 0;
+
+  if (characters) {
+    const numericHeights = characters
+      .map((character) => parseInt(character.height))
+      .filter((number) => !isNaN(number));
+
+    if (numericHeights.length > 0) {
+      minHeight = Math.min(...numericHeights);
+      maxHeight = Math.max(...numericHeights);
+    }
+  }
 
   const searchHandler = useCallback(
     (query: string) => {
@@ -43,12 +61,14 @@ export default function CharactersPage() {
     [router, searchParams]
   );
 
+  const sidebarHandler = useCallback(() => setSidebarOpen(true), []);
+
   if (status && status > 299) {
     return (
       <GridLayout spacing={2} alignItems="center" justifyContent="center">
-        <h2>
+        <Typography variant="h4">
           An unexpected error occured, please contact your space IT support
-        </h2>
+        </Typography>
       </GridLayout>
     );
   }
@@ -64,39 +84,55 @@ export default function CharactersPage() {
   if (characters.length === 0) {
     return (
       <GridLayout spacing={2} alignItems="center" justifyContent="center">
-        <h2>No Characters found in the whole Universe</h2>
+        <Typography variant="h4">
+          No Characters found in the whole Universe
+        </Typography>
       </GridLayout>
     );
   }
 
   const page = +(searchParams.get("page") || 1);
-  const totalPages = Math.ceil(dataToDisplay!.length / CHARACTERS_PER_PAGE);
+  const totalPages = Math.ceil(filteredCharacters.length / CHARACTERS_PER_PAGE);
   const { currentData, currentPage } = getCharactersPerPage(
-    dataToDisplay!,
+    filteredCharacters,
     page
   );
 
   return (
     <DataContextProvider property="allCharacters" value={characters}>
-      <Header onSearch={searchHandler} />
-      <GridLayout
-        spacing={2}
-        alignItems="center"
-        justifyContent="center"
-        sx={{ mt: -8 }}
-      >
-        <Grid container justifyContent="center" size={{ xs: 12 }}>
-          <GenericList
-            items={currentData}
-            renderItem={(item) => (
-              <CharacterItem key={item.id} character={item} />
-            )}
-          />
-        </Grid>
-        <Grid container justifyContent="center" size={{ xs: 12 }}>
-          <Pagination currentPage={currentPage} totalPages={totalPages} />
-        </Grid>
-      </GridLayout>
+      <Sidebar
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        maxHeight={maxHeight}
+        minHeight={minHeight}
+      />
+      <Box>
+        <Header
+          onSearch={searchHandler}
+          onSidebarClick={sidebarHandler}
+          searchBy={searchBy}
+        />
+        <GridLayout
+          spacing={2}
+          alignItems="center"
+          justifyContent="center"
+          sx={{ mt: -8 }}
+        >
+          <Grid container justifyContent="center" size={{ xs: 12 }}>
+            <GenericList
+              items={currentData}
+              renderItem={(item) => (
+                <CharacterItem key={item.id} character={item} />
+              )}
+            />
+          </Grid>
+          <Grid container justifyContent="center" size={{ xs: 12 }}>
+            <Pagination currentPage={currentPage} totalPages={totalPages} />
+          </Grid>
+        </GridLayout>
+      </Box>
     </DataContextProvider>
   );
-}
+};
+
+export default CharactersPage;

@@ -1,3 +1,4 @@
+/** MODELS */
 import { type Character } from "./character";
 
 export interface PeopleResponse {

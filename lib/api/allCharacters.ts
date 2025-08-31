@@ -1,12 +1,13 @@
+/** MODELS */
 import { type Character } from "@/lib/models/character";
 import { type ApiResponse } from "@/lib/models/api";
 import { type PeopleResponse } from "@/lib/models/peopleResponse";
 
-export default async function getAllCharacters(
+export const getAllCharacters = async (
   url: string,
   records: Character[] = [],
   id = 1
-): Promise<ApiResponse<Character[]>> {
+): Promise<ApiResponse<Character[]>> => {
   try {
     const response = await fetch(url, {
       cache: "force-cache",
@@ -37,11 +38,11 @@ export default async function getAllCharacters(
       data: records,
       statusCode: 200,
     };
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return {
       data: [],
       statusCode: 500,
-    }
+    };
   }
-}
+};

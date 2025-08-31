@@ -1,21 +1,24 @@
 "use client";
 
-import { type Character } from "@/lib/models/character";
+/** LIBRARIES */
 import { ListItem, ListItemText } from "@mui/material";
 import { useRouter } from "next/navigation";
+
+/** MODELS */
+import { type Character } from "@/lib/models/character";
+
+/** HOOKS */
 import { useCharacterContext } from "@/app/hooks/useCharacterContext";
 
 type CharacterItemProps = {
   character: Character;
 };
 
-export default function CharacterItem({
-  character,
-}: CharacterItemProps) {
+const CharacterItem = ({ character }: CharacterItemProps) => {
   const router = useRouter();
   const { setCharacterState } = useCharacterContext();
 
-  const id = character.id;
+  const { id } = character;
 
   const clickHandler = () => {
     setCharacterState({
@@ -43,4 +46,6 @@ export default function CharacterItem({
       <ListItemText primary={character.name} />
     </ListItem>
   );
-}
+};
+
+export default CharacterItem;
