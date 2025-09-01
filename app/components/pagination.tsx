@@ -16,7 +16,7 @@ const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
   const changeHandler = (_event: React.ChangeEvent<unknown>, value: number) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", value.toString());
-    router.push(`?${params.toString()}`);
+    router.push(`?${params.toString()}`, { scroll: false });
   };
 
   return (

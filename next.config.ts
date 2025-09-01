@@ -5,6 +5,15 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["vieraboschkova.github.io"],
   },
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/dashboard",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
