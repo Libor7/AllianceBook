@@ -15,7 +15,7 @@ const useCharacters = () => {
     if (!allCharacters) {
       (async () => {
         const { statusCode, data: allCharacters } = await getAllCharacters(
-          `${process.env.NEXT_PUBLIC_BASE_URL}${process.env.NEXT_PUBLIC_CHARACTERS_ROUTE}`
+          `${process.env.BASE_URL}${process.env.CHARACTERS_ROUTE}`
         );
         setStatus(statusCode);
         setCharacterState({
